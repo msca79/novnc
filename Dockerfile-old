@@ -1,0 +1,26 @@
+#FROM gotget/novnc
+FROM python:3
+LABEL maintainer="msca, original from: Louis T. Getterman IV, GotGet <Docker+noVNC@GotGetLLC.com>"
+
+# Install
+WORKDIR /usr/src/app
+RUN \
+    apt-get update \
+    && \
+    apt-get install --yes \
+	net-tools \
+    && \
+    pip install --no-cache-dir \
+	numpy \
+    && \
+    git clone https://github.com/novnc/noVNC.git /usr/src/app/noVNC \
+    && \
+    git clone https://github.com/kanaka/websockify /usr/src/app/noVNC/utils/websockify \
+    ;
+
+RUN ln -s /usr/src/app/noVNC/vnc.html /usr/src/app/noVNC/index.html
+
+# Run-time
+ENTRYPOINT [ "bash", "/usr/src/app/noVNC/utils/launch.sh" ]
+
+
